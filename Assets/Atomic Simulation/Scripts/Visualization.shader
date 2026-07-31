@@ -21,7 +21,6 @@ Shader "Custom/Visualization"
             };
 
             uniform float4x4 _ObjectToWorld;
-            uniform float _particleScale;
 
             /* uint colorCount;
             uint stride; */

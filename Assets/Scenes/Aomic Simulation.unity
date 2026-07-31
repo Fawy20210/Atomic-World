@@ -150,9 +150,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttractionHandler
   mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: 5172210413dcd844b93408b0f41bcac0, type: 2}
-  size: 1
-  TimeFactor: 0.2
   ParticleCount: 100
+  TimeFactor: 0.2
+  CoulombConstant: 0.000000008987
+  scale: 1e-15
   ForceProtons: 1
   ForceNeutrons: 0.01
   ForceElectrons: -1
@@ -160,10 +161,14 @@ MonoBehaviour:
   TopRight: {x: 10, y: 10}
   positions: []
   velocities: []
+  weights:
+  - 1
+  - 1
+  - 0.0005
   sizes:
+  - 0.84184
   - 1
   - 1
-  - 0.1
   colors:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0.4641509, g: 0.4641509, b: 0.4641509, a: 1}
@@ -245,7 +250,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 500
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
