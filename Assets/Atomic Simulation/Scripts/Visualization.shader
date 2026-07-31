@@ -11,6 +11,7 @@ Shader "Custom/Visualization"
             #include "UnityCG.cginc"
             #pragma target 4.5
             StructuredBuffer<float2> _positions;
+            StructuredBuffer<float> _sizes;
             StructuredBuffer<float4> _colors;
 
             struct v2f
@@ -22,14 +23,15 @@ Shader "Custom/Visualization"
             uniform float4x4 _ObjectToWorld;
             uniform float _particleScale;
 
-            uint stride;
+            /* uint colorCount;
+            uint stride; */
             
             v2f vert(appdata_base v, uint instanceID : SV_InstanceID)
             {
-                _colors.GetDimensions(3,stride);
+                /* _colors.GetDimensions(colorCount,stride); */
                 v2f o;
                 
-                float4 wpos = float4(v.vertex.xy * _particleScale + _positions[instanceID], 0, 1);
+                float4 wpos = float4(v.vertex.xy * _sizes[instanceID % 3] + _positions[instanceID], 0, 1);
                 o.pos = mul(UNITY_MATRIX_VP, wpos); //(x,y,z,scale)
                 o.color = _colors[instanceID % 3];
                 return o;
