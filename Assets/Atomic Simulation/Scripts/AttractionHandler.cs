@@ -14,7 +14,7 @@ public class AttractionHandler : MonoBehaviour
     public float ForceProtons = 1f;
     public float ForceNeutrons = 0.01f;
     public float ForceElectrons = -1f;
-
+    public float a = 0.4f;
 
     public Vector2 BottomLeft;
     public Vector2 TopRight;
@@ -75,16 +75,40 @@ public class AttractionHandler : MonoBehaviour
         return k * q1 * q2 / d;
     }
 
+    float CornellPotential(float distance)
+    {
+        // Cornell potential: V(r) = -(4/3)(a/r)+omega*r+constant || or without (4/3) and constant
+        //derivative: F(r) = -(a/r^2)+omega
+        // a = radius of particle?
+        // omega = 0.18GeV^2
+        /* float a = 0.4f; */
+        float o = 0.18f;
+        return -(a/distance)-o;
+
+    }
+
     void updatePositions()
     {
+
         for(int i=0; i<ParticleCount; i++)
         {
             for(int j=i+1; j<ParticleCount; j++)
             {
                 Vector2 direction = (positions[i] - positions[j]).normalized;
                 float distance = (positions[i] - positions[j]).SqrMagnitude();
-                velocities[i] += direction * calcForce(charges[i % 3], charges[j % 3], distance) / weights[i % 3] * TimeFactor;
-                velocities[j] += -direction * calcForce(charges[i % 3], charges[j % 3], distance) / weights[i % 3] * TimeFactor;
+                /* if(distance < 1)
+                {
+                    //float rootDist = Mathf.Sqrt(distance);
+                    velocities[i] += direction * CornellPotential(distance) / weights[i % 3] * TimeFactor;
+                    velocities[j] += -direction * CornellPotential(distance) / weights[i % 3] * TimeFactor;
+                }
+                else
+                {
+                } */
+                //if(distance<1) Debug.Log(("close",CornellPotential(distance)));
+                /* Debug.Log((CornellPotential(distance), distance)); */
+                    velocities[i] += direction * (calcForce(charges[i % 3], charges[j % 3], distance) +  CornellPotential(distance)) / weights[i % 3] * TimeFactor;
+                    velocities[j] += -direction * (calcForce(charges[i % 3], charges[j % 3], distance) +  CornellPotential(distance)) / weights[j % 3] * TimeFactor;
             }
         }
         for(int i=0; i<ParticleCount; i++)

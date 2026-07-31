@@ -155,10 +155,10 @@ MonoBehaviour:
   CoulombConstant: 0.000000008987
   scale: 1e-15
   ForceProtons: 1
-  ForceNeutrons: 0.01
+  ForceNeutrons: 0
   ForceElectrons: -1
-  BottomLeft: {x: -10, y: -10}
-  TopRight: {x: 10, y: 10}
+  BottomLeft: {x: -50, y: -50}
+  TopRight: {x: 50, y: 50}
   positions: []
   velocities: []
   weights:
@@ -250,7 +250,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 500
+  orthographic size: 100
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
