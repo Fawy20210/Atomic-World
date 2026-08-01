@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class AttractionHandler : MonoBehaviour
+public class AttractionHandlerAtoms : MonoBehaviour
 {
     public Mesh mesh;
     public Material material;
@@ -15,6 +15,7 @@ public class AttractionHandler : MonoBehaviour
     public float ForceNeutrons = 0.01f;
     public float ForceElectrons = -1f;
     public float a = 0.4f;
+    public float o = 0.18f;
 
     public Vector2 BottomLeft;
     public Vector2 TopRight;
@@ -82,7 +83,7 @@ public class AttractionHandler : MonoBehaviour
         // a = radius of particle?
         // omega = 0.18GeV^2
         /* float a = 0.4f; */
-        float o = 0.18f;
+        /* float o = 0.18f; */
         return -(a/distance)-o;
 
     }
