@@ -96,7 +96,7 @@ public class AttractionHandlerAtoms : MonoBehaviour
             for(int j=i+1; j<ParticleCount; j++)
             {
                 Vector2 direction = (positions[i] - positions[j]).normalized;
-                float distance = (positions[i] - positions[j]).SqrMagnitude();
+                float distance = (positions[i] - positions[j]).sqrMagnitude;
                 /* if(distance < 1)
                 {
                     //float rootDist = Mathf.Sqrt(distance);

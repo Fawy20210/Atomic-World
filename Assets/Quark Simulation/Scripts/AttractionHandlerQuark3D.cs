@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class AttractionHandlerQuark : MonoBehaviour
+public class AttractionHandlerQuark3D : MonoBehaviour
 {
     public Mesh mesh;
     public Material material;
@@ -20,8 +20,8 @@ public class AttractionHandlerQuark : MonoBehaviour
     public Vector2 TopRight;
 
 
-    public Vector2[] positions;
-    public Vector2[] velocities;
+    public Vector3[] positions;
+    public Vector3[] velocities;
     public float[] weights;
     public float[] sizes;
     public Color[] colors;
@@ -42,11 +42,11 @@ public class AttractionHandlerQuark : MonoBehaviour
         Debug.Log(k);
 
 
-        positions = new Vector2[ParticleCount];
-        velocities = new Vector2[ParticleCount];
+        positions = new Vector3[ParticleCount];
+        velocities = new Vector3[ParticleCount];
         charges = new[] {ForceUp, ForceDown};
 
-        positionBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 2);
+        positionBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 3);
         sizeBuffer = new ComputeBuffer(2, sizeof(float));
         colorBuffer = new ComputeBuffer(2, sizeof(float) * 4);
 
@@ -54,8 +54,9 @@ public class AttractionHandlerQuark : MonoBehaviour
         {
             float x = Random.Range(BottomLeft.x,TopRight.x);
             float y = Random.Range(BottomLeft.y,TopRight.y);
-            positions[i]=new Vector2(x,y);
-            velocities[i]=new Vector2(0,0);
+            float z = Random.Range(BottomLeft.y,TopRight.y);
+            positions[i]=new Vector3(x,y,z);
+            velocities[i]=new Vector3(0,0,0);
         }
 
         positionBuffer.SetData(positions);
@@ -94,7 +95,7 @@ public class AttractionHandlerQuark : MonoBehaviour
         {
             for(int j=i+1; j<ParticleCount; j++)
             {
-                Vector2 direction = (positions[i] - positions[j]).normalized;
+                Vector3 direction = (positions[i] - positions[j]).normalized;
                 float distance = (positions[i] - positions[j]).sqrMagnitude;
                 /* if(distance < 1)
                 {
