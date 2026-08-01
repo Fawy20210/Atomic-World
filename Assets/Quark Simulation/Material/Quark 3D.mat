@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Quark 3D
-  m_Shader: {fileID: 4800000, guid: 05e5e22b4c5e88e4f85fe1b1eb0014bd, type: 3}
+  m_Shader: {fileID: 4800000, guid: f6fa3ba12bb9e7146b861a76d04e6f95, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
