@@ -1,4 +1,4 @@
-Shader "Custom/Visualization"
+Shader "Custom/VisualizationQuark"
 {
     SubShader
     {

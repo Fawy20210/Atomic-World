@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class AttractionHandler : MonoBehaviour
+public class AttractionHandlerQuark : MonoBehaviour
 {
     public Mesh mesh;
     public Material material;
