@@ -30,9 +30,9 @@ Shader "Custom/VisualizationQuark"
                 /* _colors.GetDimensions(colorCount,stride); */
                 v2f o;
                 
-                float4 wpos = float4(v.vertex.xy * _sizes[instanceID % 3] + _positions[instanceID], 0, 1);
+                float4 wpos = float4(v.vertex.xy * _sizes[instanceID % 2] + _positions[instanceID], 0, 1);
                 o.pos = mul(UNITY_MATRIX_VP, wpos); //(x,y,z,scale)
-                o.color = _colors[instanceID % 3];
+                o.color = _colors[instanceID % 2];
                 return o;
             }
 

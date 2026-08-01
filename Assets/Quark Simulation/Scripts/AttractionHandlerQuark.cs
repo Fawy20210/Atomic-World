@@ -11,9 +11,8 @@ public class AttractionHandlerQuark : MonoBehaviour
     public float TimeFactor;
     public float CoulombConstant;
     public float scale = 1e-15f;
-    public float ForceProtons = 1f;
-    public float ForceNeutrons = 0.01f;
-    public float ForceElectrons = -1f;
+    public float ForceUp = 2/3f;
+    public float ForceDown = -1/3f;
     public float a = 0.4f;
     public float o = 0.18f;
 
@@ -45,11 +44,11 @@ public class AttractionHandlerQuark : MonoBehaviour
 
         positions = new Vector2[ParticleCount];
         velocities = new Vector2[ParticleCount];
-        charges = new[] {ForceProtons, ForceNeutrons, ForceElectrons};
+        charges = new[] {ForceUp, ForceDown};
 
         positionBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 2);
-        sizeBuffer = new ComputeBuffer(3, sizeof(float));
-        colorBuffer = new ComputeBuffer(3, sizeof(float) * 4);
+        sizeBuffer = new ComputeBuffer(2, sizeof(float));
+        colorBuffer = new ComputeBuffer(2, sizeof(float) * 4);
 
         for(int i=0; i<ParticleCount; i++)
         {
@@ -108,8 +107,8 @@ public class AttractionHandlerQuark : MonoBehaviour
                 } */
                 //if(distance<1) Debug.Log(("close",CornellPotential(distance)));
                 /* Debug.Log((CornellPotential(distance), distance)); */
-                    velocities[i] += direction * (calcForce(charges[i % 3], charges[j % 3], distance) +  CornellPotential(distance)) / weights[i % 3] * TimeFactor;
-                    velocities[j] += -direction * (calcForce(charges[i % 3], charges[j % 3], distance) +  CornellPotential(distance)) / weights[j % 3] * TimeFactor;
+                    velocities[i] += direction * (calcForce(charges[i % 2], charges[j % 2], distance) +  CornellPotential(distance)) / weights[i % 2] * TimeFactor;
+                    velocities[j] += -direction * (calcForce(charges[i % 2], charges[j % 2], distance) +  CornellPotential(distance)) / weights[j % 2] * TimeFactor;
             }
         }
         for(int i=0; i<ParticleCount; i++)

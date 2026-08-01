@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1582910300}
-  - component: {fileID: 1582910299}
+  - component: {fileID: 1582910301}
   m_Layer: 0
   m_Name: Handler
   m_TagString: Untagged
@@ -136,44 +136,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1582910299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1582910298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2247294f5945c949801a21536433569, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttractionHandler
-  mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: 5172210413dcd844b93408b0f41bcac0, type: 2}
-  ParticleCount: 200
-  TimeFactor: 0.0002
-  CoulombConstant: 0.000000008987
-  scale: 1e-15
-  ForceProtons: 1
-  ForceNeutrons: 0
-  ForceElectrons: -1
-  a: 0.4
-  BottomLeft: {x: -50, y: -50}
-  TopRight: {x: 50, y: 50}
-  positions: []
-  velocities: []
-  weights:
-  - 1
-  - 1
-  - 0.0005
-  sizes:
-  - 0.84184
-  - 1
-  - 1
-  colors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0.4641509, g: 0.4641509, b: 0.4641509, a: 1}
-  - {r: 0, g: 0, b: 1, a: 1}
 --- !u!4 &1582910300
 Transform:
   m_ObjectHideFlags: 0
@@ -189,6 +151,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1582910301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582910298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b70b5da76919e744881a43785df56bc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttractionHandlerQuark
+  mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  material: {fileID: 2100000, guid: 9930d54ab79153a48b0a97a1bf864851, type: 2}
+  ParticleCount: 200
+  TimeFactor: 0.0002
+  CoulombConstant: 0.000000008987
+  scale: 1e-15
+  ForceUp: 0.6666667
+  ForceDown: -0.33333334
+  a: 0.4
+  o: 0.18
+  BottomLeft: {x: -50, y: -50}
+  TopRight: {x: 50, y: 50}
+  positions: []
+  velocities: []
+  weights:
+  - 1
+  - 1
+  sizes:
+  - 1
+  - 1
+  colors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 1, a: 0}
 --- !u!1 &1720416432
 GameObject:
   m_ObjectHideFlags: 0
