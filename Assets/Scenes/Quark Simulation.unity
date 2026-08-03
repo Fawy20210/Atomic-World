@@ -159,7 +159,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1582910298}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b70b5da76919e744881a43785df56bc8, type: 3}
   m_Name: 
@@ -170,10 +170,11 @@ MonoBehaviour:
   TimeFactor: 0.002
   CoulombConstant: 0.000000008987
   scale: 1e-15
-  size: 1
-  sizeScale: 1
-  dampening: 0.9
-  minDist: 0.0004
+  size: 0.0043
+  sizeScale: 100
+  dampening: 1
+  minDist: 0.0043
+  maxDist: 1
   pushForce: 1
   ForceUp: 0.6666667
   ForceDown: -0.33333334
@@ -224,7 +225,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1582910298}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 676619eddf4e63141a198c907fd6a466, type: 3}
   m_Name: 

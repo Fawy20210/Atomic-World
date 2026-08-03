@@ -15,6 +15,7 @@ public class AttractionHandlerQuark : MonoBehaviour
     public float sizeScale = 1f;
     public float dampening = 0.9f;
     public float minDist = 0.0004f;
+    public float maxDist = 1f;
     public float pushForce = 0.0004f;
     public float ForceUp = 2/3f;
     public float ForceDown = -1/3f;
@@ -34,6 +35,7 @@ public class AttractionHandlerQuark : MonoBehaviour
     public float[] charges;
     float k;
     float minDistSqrt;
+    float maxDistSqrt;
 
     ComputeBuffer positionBuffer;
     ComputeBuffer colorBuffer;
@@ -46,6 +48,7 @@ public class AttractionHandlerQuark : MonoBehaviour
         k =  scale*scale/2.5669699665e-38f * CoulombConstant;//1.602176634e-19f * CoulombConstant;
         Debug.Log(k);
         minDistSqrt = minDist*minDist;
+        maxDistSqrt = maxDist*maxDist;
 
 
         positions = new Vector2[ParticleCount];
@@ -87,6 +90,11 @@ public class AttractionHandlerQuark : MonoBehaviour
     {
         return  d<minDistSqrt ? 0 : (k * q1 * q2 / d);
     }
+    float convert(float x)
+    {
+        //turn fm into GeV^-1
+        return x*5.068f;
+    }
 
     float CornellPotential(float distance)
     {
@@ -96,8 +104,13 @@ public class AttractionHandlerQuark : MonoBehaviour
         // omega = 0.18GeV^2
         /* float a = 0.4f; */
         /* float o = 0.18f; */
-        return distance<minDistSqrt ? (((4*a)/(3*distance))+o):(-((4*a)/(3*distance))-o);
+        //distance<minDistSqrt ? :(((4*a)/(3*distance))+o)
+        return -((4*a)/(3*distance))-o;
 
+    }
+    float MyStrongForce(float distance)
+    {
+        return Mathf.Sqrt(distance)/(a*a);
     }
 
     void updatePositions()
@@ -121,11 +134,20 @@ public class AttractionHandlerQuark : MonoBehaviour
                 } */
                 //if(distance<1) Debug.Log(("close",CornellPotential(distance)));
                 /* Debug.Log((CornellPotential(distance), distance)); */
-                if(distance > minDistSqrt)
+
+                float forceSum = 0f;
+                if(distance > minDistSqrt )
                 {
-                    velocities[i] += direction * (calcForce(charges[i % 10], charges[j % 10], distance) +  CornellPotential(distance)) / weights[i % 10] * TimeFactor;
-                    velocities[j] += -direction * (calcForce(charges[i % 10], charges[j % 10], distance) +  CornellPotential(distance)) / weights[j % 10] * TimeFactor;
+                    //Debug.Log((calcForce(charges[i % 10], charges[j % 10], distance), CornellPotential(convert(distance))));
+                    /* 
+                    velocities[i] += direction * (calcForce(charges[i % 10], charges[j % 10], distance) +  CornellPotential(convert(distance))) / weights[i % 10] * TimeFactor;
+                    velocities[j] += -direction * (calcForce(charges[i % 10], charges[j % 10], distance) +  CornellPotential(convert(distance))) / weights[j % 10] * TimeFactor;
+                    */
+                    if (distance < maxDist) forceSum += calcForce(charges[i % 10], charges[j % 10], distance) +  MyStrongForce(convert(distance));
+                    else forceSum += calcForce(charges[i % 10], charges[j % 10], distance);
                 }
+                velocities[i] += direction * forceSum;
+                velocities[j] += -direction * forceSum;
             }
         }
         for(int i=0; i<ParticleCount; i++)
