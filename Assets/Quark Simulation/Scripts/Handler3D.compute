@@ -1,0 +1,74 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel updateVelocities
+#pragma kernel updatePositions
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWStructuredBuffer<float3> _positions;
+RWStructuredBuffer<float3> _velocities;
+RWStructuredBuffer<float> _charges;
+
+uint _ParticleCount;
+uint _Differents;
+float _K;
+float _O;
+float _A;
+float _dampening;
+float _minDistSqrt;
+float _maxDistSqrt;
+float _TimeFactor;
+
+
+float calcForce(float q1, float q2, float d)
+{
+    return (_K * q1 * q2 / d);
+}
+
+float convert(float x)
+{
+    //turn fm into GeV^-1
+    return x*5.068;
+}
+
+float CornellPotential(float distance)
+{
+    // Cornell potential: V(r) = -(4/3)(a/r)+omega*r+constant || or without (4/3) and constant
+    //derivative: F(r) = -(a/r^2)+omega
+    // a = radius of particle?
+    // omega = 0.18GeV^2
+    /* float a = 0.4f; */
+    /* float o = 0.18f; */
+    //distance<minDistSqrt ? :(((4*a)/(3*distance))+o)
+    return -((4*_A)/(3*distance))-_O;
+
+}
+[numthreads(64,1,1)]
+void updateVelocities(uint3 id : SV_DispatchThreadID)
+{
+    uint i = id.x;
+    if(i >= _ParticleCount) return;
+    _velocities[i]*=_dampening;
+    for(uint j=0; j<_ParticleCount; j++)
+    {
+        if(j==i) break;
+        float3 dir = _positions[i] - _positions[j];
+        float3 direction = normalize(dir);
+        float distance = dot(dir,dir);
+        float forceSum = 0;
+        if(distance > _minDistSqrt)
+        {
+            if (distance < _maxDistSqrt) forceSum += calcForce(_charges[i % _Differents], _charges[j % _Differents], distance) +  CornellPotential(convert(distance));
+            else forceSum += calcForce(_charges[i % _Differents], _charges[_Differents], distance);
+        }
+        _velocities[i] += direction * forceSum * _TimeFactor;
+        //_velocities[j] += -direction * forceSum * _TimeFactor;
+        
+    }
+}
+[numthreads(64,1,1)]
+void updatePositions(uint3 id : SV_DispatchThreadID){
+    uint i = id.x;
+    if(i >= _ParticleCount) return;
+    _positions[i] += _velocities[i]; 
+}
+

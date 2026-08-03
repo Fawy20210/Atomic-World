@@ -21,6 +21,7 @@ Shader "Custom/VisualizationQuark3D"
 
             uniform float4x4 _ObjectToWorld;
             float _size;
+            float _Differents;
 
             /* uint colorCount;
             uint stride; */
@@ -32,7 +33,7 @@ Shader "Custom/VisualizationQuark3D"
                 
                 float4 wpos = float4(v.vertex.xyz * _size + _positions[instanceID], 1);
                 o.pos = mul(UNITY_MATRIX_VP, wpos); //(x,y,z,scale)
-                o.color = _colors[instanceID % 10];
+                o.color = _colors[instanceID % _Differents];
                 return o;
             }
 
