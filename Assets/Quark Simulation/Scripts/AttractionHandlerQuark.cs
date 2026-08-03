@@ -110,7 +110,7 @@ public class AttractionHandlerQuark : MonoBehaviour
     }
     float MyStrongForce(float distance)
     {
-        return Mathf.Sqrt(distance)/(a*a);
+        return distance/(a*a);
     }
 
     void updatePositions()
@@ -143,11 +143,11 @@ public class AttractionHandlerQuark : MonoBehaviour
                     velocities[i] += direction * (calcForce(charges[i % 10], charges[j % 10], distance) +  CornellPotential(convert(distance))) / weights[i % 10] * TimeFactor;
                     velocities[j] += -direction * (calcForce(charges[i % 10], charges[j % 10], distance) +  CornellPotential(convert(distance))) / weights[j % 10] * TimeFactor;
                     */
-                    if (distance < maxDist) forceSum += calcForce(charges[i % 10], charges[j % 10], distance) +  MyStrongForce(convert(distance));
+                    if (distance < maxDistSqrt) forceSum += calcForce(charges[i % 10], charges[j % 10], distance) +  CornellPotential(convert(distance));
                     else forceSum += calcForce(charges[i % 10], charges[j % 10], distance);
                 }
-                velocities[i] += direction * forceSum;
-                velocities[j] += -direction * forceSum;
+                velocities[i] += direction * forceSum / weights[i % 10] * TimeFactor;
+                velocities[j] += -direction * forceSum / weights[j % 10] * TimeFactor;
             }
         }
         for(int i=0; i<ParticleCount; i++)

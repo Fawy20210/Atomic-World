@@ -172,14 +172,14 @@ MonoBehaviour:
   scale: 1e-15
   size: 0.0043
   sizeScale: 100
-  dampening: 1
-  minDist: 0.0043
+  dampening: 0.999
+  minDist: 0.3
   maxDist: 1
   pushForce: 1
   ForceUp: 0.6666667
   ForceDown: -0.33333334
-  a: 0
-  o: 0
+  a: 0.4
+  o: 0.18
   bounds: 1
   BottomLeft: {x: -50, y: -50}
   TopRight: {x: 50, y: 50}
