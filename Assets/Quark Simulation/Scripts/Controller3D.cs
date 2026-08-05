@@ -100,7 +100,7 @@ public class Controller3D : MonoBehaviour
         
         compute.SetFloat("_ParticleCount", ParticleCount);
         compute.SetFloat("_Differents", TimeFactor);
-        compute.SetFloat("_K", CoulombConstant);
+        compute.SetFloat("_K", k);
         compute.SetFloat("_O", o);
         compute.SetFloat("_A", a);
         compute.SetFloat("_dampening", dampening);
