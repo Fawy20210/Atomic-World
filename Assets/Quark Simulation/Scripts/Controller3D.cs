@@ -26,6 +26,7 @@ public class Controller3D : MonoBehaviour
     public Vector3[] positions;
     public Vector3[] velocities;
     public Color[] colors;
+    float[] charges;
 
     float k;
     float minDistSqrt;
@@ -59,7 +60,7 @@ public class Controller3D : MonoBehaviour
 
         positions = new Vector3[ParticleCount];
         velocities = new Vector3[ParticleCount];
-        float[] charges = new float[upPart + downPart];
+        charges = new float[upPart + downPart];
 
         positionsBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 3);
         velocitiesBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 3);
@@ -99,7 +100,7 @@ public class Controller3D : MonoBehaviour
 
         
         compute.SetFloat("_ParticleCount", ParticleCount);
-        compute.SetFloat("_Differents", TimeFactor);
+        compute.SetInt("_Differents", upPart + downPart);
         compute.SetFloat("_K", k);
         compute.SetFloat("_O", o);
         compute.SetFloat("_A", a);
@@ -111,6 +112,13 @@ public class Controller3D : MonoBehaviour
         BindAll(updateVelocitiesID);
         BindAll(updatePositionsID);
 
+    }
+    void OnDisable()
+    {
+        positionsBuffer.Release();
+        velocitiesBuffer.Release();
+        chargesBuffer.Release();
+        colorBuffer.Release();
     }
 
     // Update is called once per frame

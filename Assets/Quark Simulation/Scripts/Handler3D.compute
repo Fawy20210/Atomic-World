@@ -9,7 +9,7 @@ RWStructuredBuffer<float3> _velocities;
 RWStructuredBuffer<float> _charges;
 
 uint _ParticleCount;
-uint _Differents;
+int _Differents;
 float _K;
 float _O;
 float _A;
@@ -21,7 +21,7 @@ float _TimeFactor;
 
 float calcForce(float q1, float q2, float d)
 {
-    return (_K * q1 * q2 / d);
+    return _K * q1 * q2 / d;
 }
 
 float convert(float x)
@@ -57,8 +57,9 @@ void updateVelocities(uint3 id : SV_DispatchThreadID)
         float forceSum = 0;
         if(distance > _minDistSqrt)
         {
+
             if (distance < _maxDistSqrt) forceSum += calcForce(_charges[i % _Differents], _charges[j % _Differents], distance) +  CornellPotential(convert(distance));
-            else forceSum += calcForce(_charges[i % _Differents], _charges[_Differents], distance);
+            else forceSum += calcForce(_charges[i % _Differents], _charges[j % _Differents], distance);
         }
         _velocities[i] += direction * forceSum * _TimeFactor;
         //_velocities[j] += -direction * forceSum * _TimeFactor;
