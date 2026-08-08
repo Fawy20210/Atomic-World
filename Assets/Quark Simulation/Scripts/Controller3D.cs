@@ -20,7 +20,7 @@ public class Controller3D : MonoBehaviour
     public float a = 0.4f;
     public float o = 0.18f;
     public float bounds;
-    public int A,B,C;
+    public int A;
 
 
     public Vector3[] positions;
@@ -52,6 +52,7 @@ public class Controller3D : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
+        A = Mathf.CeilToInt(ParticleCount/64);
         k =  scale*scale/2.5669699665e-38f * CoulombConstant;//1.602176634e-19f * CoulombConstant;
         Debug.Log(k);
         minDistSqrt = minDist*minDist;
@@ -124,8 +125,8 @@ public class Controller3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        compute.Dispatch(updateVelocitiesID, A,B,C);
-        compute.Dispatch(updatePositionsID, A,B,C);
+        compute.Dispatch(updateVelocitiesID, A,1,1);
+        compute.Dispatch(updatePositionsID, A,1,1);
         rp = new RenderParams(material);
         rp.worldBounds = new Bounds(Vector3.zero, 100000000*Vector3.one); // use tighter bounds
         rp.matProps = new MaterialPropertyBlock();
