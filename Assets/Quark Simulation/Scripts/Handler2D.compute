@@ -4,8 +4,8 @@
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
-RWStructuredBuffer<float3> _positions;
-RWStructuredBuffer<float3> _velocities;
+RWStructuredBuffer<float2> _positions;
+RWStructuredBuffer<float2> _velocities;
 RWStructuredBuffer<float> _charges;
 
 uint _ParticleCount;
@@ -51,8 +51,8 @@ void updateVelocities(uint3 id : SV_DispatchThreadID)
     for(uint j=0; j<_ParticleCount; j++)
     {
         if(j==i) break;
-        float3 dir = _positions[i] - _positions[j];
-        float3 direction = normalize(dir);
+        float2 dir = _positions[i] - _positions[j];
+        float2 direction = normalize(dir);
         float distance = dot(dir,dir);
         float forceSum = 0;
         if(distance > _minDistSqrt)

@@ -10,7 +10,7 @@ Shader "Custom/VisualizationQuark2D"
 
             #include "UnityCG.cginc"
             #pragma target 4.5
-            StructuredBuffer<float3> _positions;
+            StructuredBuffer<float2> _positions;
             StructuredBuffer<float4> _colors;
 
             struct v2f
@@ -31,7 +31,7 @@ Shader "Custom/VisualizationQuark2D"
                 /* _colors.GetDimensions(colorCount,stride); */
                 v2f o;
                 
-                float4 wpos = float4(v.vertex.xyz * _size + _positions[instanceID], 1);
+                float4 wpos = float4(v.vertex.xy * _size + _positions[instanceID], 0, 1);
                 o.pos = mul(UNITY_MATRIX_VP, wpos); //(x,y,z,scale)
                 o.color = _colors[instanceID % _Differents];
                 return o;

@@ -19,12 +19,12 @@ public class Controller2D : MonoBehaviour
     public float dampening = 0.9f;
     public float a = 0.4f;
     public float o = 0.18f;
-    public float bounds;
-    public int A,B,C;
+    public float bounds = 10;
+    public int A;
 
 
-    public Vector3[] positions;
-    public Vector3[] velocities;
+    public Vector2[] positions;
+    public Vector2[] velocities;
     public Color[] colors;
     float[] charges;
 
@@ -52,18 +52,19 @@ public class Controller2D : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
+        A = Mathf.CeilToInt(ParticleCount/64);
         k =  scale*scale/2.5669699665e-38f * CoulombConstant;//1.602176634e-19f * CoulombConstant;
         Debug.Log(k);
         minDistSqrt = minDist*minDist;
         maxDistSqrt = maxDist*maxDist;
 
 
-        positions = new Vector3[ParticleCount];
-        velocities = new Vector3[ParticleCount];
+        positions = new Vector2[ParticleCount];
+        velocities = new Vector2[ParticleCount];
         charges = new float[upPart + downPart];
 
-        positionsBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 3);
-        velocitiesBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 3);
+        positionsBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 2);
+        velocitiesBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 2);
         chargesBuffer = new ComputeBuffer(upPart + downPart, sizeof(float));
         colorBuffer = new ComputeBuffer(upPart + downPart, sizeof(float) * 4);
 
@@ -72,13 +73,12 @@ public class Controller2D : MonoBehaviour
 
         for(int i=0; i<ParticleCount; i++)
         {
-            float x,y,z;
+            float x,y;
             x = Random.Range(-bounds,bounds);
             y = Random.Range(-bounds,bounds);
-            z = Random.Range(-bounds,bounds);
                 
-            positions[i]=new Vector3(x,y,z);
-            velocities[i]=new Vector3(0,0,0);
+            positions[i]=new Vector2(x,y);
+            velocities[i]=new Vector2(0,0);
         }
         for(int i=0; i<upPart+downPart; i++)
         {
@@ -124,8 +124,8 @@ public class Controller2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        compute.Dispatch(updateVelocitiesID, A,B,C);
-        compute.Dispatch(updatePositionsID, A,B,C);
+        compute.Dispatch(updateVelocitiesID, A,1,1);
+        compute.Dispatch(updatePositionsID, A,1,1);
         rp = new RenderParams(material);
         rp.worldBounds = new Bounds(Vector3.zero, 100000000*Vector3.one); // use tighter bounds
         rp.matProps = new MaterialPropertyBlock();
