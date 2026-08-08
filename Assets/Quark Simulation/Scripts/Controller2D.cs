@@ -5,11 +5,11 @@ public class Controller2D : MonoBehaviour
     public Mesh mesh;
     public Material material;
     public ComputeShader compute;
-    public int ParticleCount;
+    public int ParticleCount = 1024;
     public int upPart = 1;
     public int downPart = 1;
 
-    public float TimeFactor;
+    public float TimeFactor = 0.0002f;
     public float CoulombConstant = 8.987e-09f;
     public float scale = 1e-15f;
     public float size = 0.0043f;
@@ -23,8 +23,8 @@ public class Controller2D : MonoBehaviour
     public int A;
 
 
-    public Vector2[] positions;
-    public Vector2[] velocities;
+     Vector2[] positions;
+     Vector2[] velocities;
     public Color[] colors;
     float[] charges;
 
