@@ -27,6 +27,8 @@ public class QuarkGameHandler : MonoBehaviour
         UI2D.enabled = true;
         cameraHandler2D.enabled = true;
         controller2D.enabled = true;
+
+        cameraHandler2D.ResetCamera();
     }
     public void Start3D()
     {
@@ -34,6 +36,8 @@ public class QuarkGameHandler : MonoBehaviour
         UI3D.enabled = true;
         cameraHandler3D.enabled = true;
         controller3D.enabled = true;
+
+        cameraHandler3D.ResetCamera();
     }
     public void EndAll()
     {

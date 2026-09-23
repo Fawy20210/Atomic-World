@@ -71,6 +71,7 @@ public class Controller3D : MonoBehaviour
         positions = new Vector3[ParticleCount];
         velocities = new Vector3[ParticleCount];
         charges = new float[upPart + downPart];
+        colors = new Color[upPart + downPart];
 
         positionsBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 3);
         velocitiesBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 3);

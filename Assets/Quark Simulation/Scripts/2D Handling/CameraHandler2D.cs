@@ -17,4 +17,9 @@ public class CameraHandler2D : MonoBehaviour
 
         transform.position += new Vector3(moveValue.x, moveValue.z,moveValue.y);
     }
+    public void ResetCamera()
+    {
+        transform.position = new Vector3(0,0,-40);
+        transform.eulerAngles = new Vector3(0,0,0);
+    }
 }
