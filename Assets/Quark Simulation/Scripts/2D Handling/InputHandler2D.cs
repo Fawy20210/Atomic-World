@@ -58,6 +58,7 @@ public class InputHandler2D : MonoBehaviour
     public void UpdateSizeScale()
     {
         controller.sizeScale = float.Parse(sizeScaleInput.text);
+        controller.updateRender = true;
     }
 
     public void UpdateColors()
@@ -86,6 +87,16 @@ public class InputHandler2D : MonoBehaviour
             DownColorInput.text = "#0000ff";
         }
         controller.updateColors=true;
+    }
+    public void PauseUpdate()
+    {
+        if(controller.pause){
+            controller.pause=false;
+        }
+        else
+        {
+            controller.pause=true;
+        }
     }
 
 

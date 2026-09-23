@@ -37,6 +37,8 @@ public class Controller2D : MonoBehaviour
 
     public bool DoApply;
     public bool updateColors;
+    public bool updateRender = true;
+    public bool pause = false;
     public int A;
 
 
@@ -124,6 +126,7 @@ public class Controller2D : MonoBehaviour
         BindAll(updateVelocitiesID);
         BindAll(updatePositionsID);
 
+        updateRender = true;
     }
     void OnDisable()
     {
@@ -165,19 +168,26 @@ public class Controller2D : MonoBehaviour
             }
             updateColors = false;
             colorBuffer.SetData(colors);
+            updateRender=true;
         }
-
-        compute.Dispatch(updateVelocitiesID, A,1,1);
-        compute.Dispatch(updatePositionsID, A,1,1);
-        rp = new RenderParams(material);
-        rp.worldBounds = new Bounds(Vector3.zero, 100000000*Vector3.one); // use tighter bounds
-        rp.matProps = new MaterialPropertyBlock();
-        rp.matProps.SetMatrix("_ObjectToWorld", Matrix4x4.Translate(new Vector3(-4f, 0, 0)));
-        rp.matProps.SetFloat("_NumInstances", ParticleCount);
-        rp.matProps.SetBuffer("_positions", positionsBuffer);
-        rp.matProps.SetFloat("_size", size*sizeScale);
-        rp.matProps.SetFloat("_Differents", upPart+downPart);
-        rp.matProps.SetBuffer("_colors", colorBuffer);
+        if (!pause)
+        {
+            compute.Dispatch(updateVelocitiesID, A,1,1);
+            compute.Dispatch(updatePositionsID, A,1,1);
+        }
+        if (updateRender)
+        {
+            rp = new RenderParams(material);
+            rp.worldBounds = new Bounds(Vector3.zero, 100000000*Vector3.one); // use tighter bounds
+            rp.matProps = new MaterialPropertyBlock();
+            rp.matProps.SetMatrix("_ObjectToWorld", Matrix4x4.Translate(new Vector3(-4f, 0, 0)));
+            rp.matProps.SetFloat("_NumInstances", ParticleCount);
+            rp.matProps.SetBuffer("_positions", positionsBuffer);
+            rp.matProps.SetFloat("_size", size*sizeScale);
+            rp.matProps.SetFloat("_Differents", upPart+downPart);
+            rp.matProps.SetBuffer("_colors", colorBuffer);
+            updateRender = false;
+        }
         Graphics.RenderMeshPrimitives(rp, mesh, 0, ParticleCount);
     }
 }

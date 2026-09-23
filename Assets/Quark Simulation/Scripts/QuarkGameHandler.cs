@@ -38,15 +38,21 @@ public class QuarkGameHandler : MonoBehaviour
     public void EndAll()
     {
         SelectionScreen.enabled = true;
-        UI2D.enabled = true;
+        UI2D.enabled = false;
         cameraHandler2D.enabled = false;
         controller2D.enabled = false;
-        UI3D.enabled = true;
+        controller2D.pause = false;
+        UI3D.enabled = false;
         cameraHandler3D.enabled = false;
         controller3D.enabled = false;
+        controller3D.pause = false;
     }
-    public void Quit()
+    public void QuitGame()
     {
-        
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
