@@ -5,9 +5,10 @@ public class Controller3D : MonoBehaviour
     public Mesh mesh;
     public Material material;
     public ComputeShader compute;
-    public int ParticleCount = 1024;
+    public int ParticleCount = 16384;
     public int upPart = 1;
     public int downPart = 1;
+    public float bounds;
 
     public float TimeFactor = 0.0002f;
     public float CoulombConstant = 8.987e-09f;
@@ -16,11 +17,13 @@ public class Controller3D : MonoBehaviour
     public float sizeScale = 100f;
     public float minDist = 0.0004f;
     public float maxDist = 1f;
-    public float dampening = 0.9f;
+    public float dampening = 0.999f;
     public float a = 0.4f;
     public float o = 0.18f;
-    public float bounds;
-    public int A;
+
+    public Color UpColor = Color.red;
+    public Color DownColor = Color.blue;
+
 
 
     public Vector3[] positions;
@@ -31,6 +34,10 @@ public class Controller3D : MonoBehaviour
     float k;
     float minDistSqrt;
     float maxDistSqrt;
+
+    public bool DoApply;
+    public bool updateColors;
+    public int A;
 
     ComputeBuffer positionsBuffer;
     ComputeBuffer velocitiesBuffer;
@@ -52,7 +59,7 @@ public class Controller3D : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
-        A = Mathf.CeilToInt(ParticleCount/64);
+        A = Mathf.CeilToInt(ParticleCount/64f);
         k =  scale*scale/2.5669699665e-38f * CoulombConstant;//1.602176634e-19f * CoulombConstant;
         Debug.Log(k);
         minDistSqrt = minDist*minDist;
@@ -86,10 +93,12 @@ public class Controller3D : MonoBehaviour
             if (i < upPart)
             {
                 charges[i] = 2f/3f;
+                colors[i] = UpColor;
             }
             else
             {
                 charges[i] = -1f/3f;
+                colors[i] = DownColor;
             }
         }
 
@@ -125,6 +134,35 @@ public class Controller3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+         if (DoApply)
+        {
+            minDistSqrt = minDist*minDist;
+            maxDistSqrt = maxDist*maxDist;
+            compute.SetFloat("_O", o);
+            compute.SetFloat("_A", a);
+            compute.SetFloat("_dampening", dampening);
+            compute.SetFloat("_minDistSqrt", minDistSqrt);
+            compute.SetFloat("_maxDistSqrt", maxDistSqrt);
+            compute.SetFloat("_TimeFactor", TimeFactor);
+            DoApply = false;
+        }
+        if (updateColors)
+        {
+            for(int i=0; i<upPart+downPart; i++)
+            {
+                if (i < upPart)
+                {
+                    colors[i] = UpColor;
+                }
+                else
+                {
+                    colors[i] = DownColor;
+                }
+            }
+            updateColors = false;
+            colorBuffer.SetData(colors);
+        }
+        
         compute.Dispatch(updateVelocitiesID, A,1,1);
         compute.Dispatch(updatePositionsID, A,1,1);
         rp = new RenderParams(material);
