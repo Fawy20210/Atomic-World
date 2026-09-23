@@ -5,7 +5,7 @@ public class Controller2D : MonoBehaviour
     public Mesh mesh;
     public Material material;
     public ComputeShader compute;
-    public int ParticleCount = 1024;
+    public int ParticleCount = 16384;
     public int upPart = 1;
     public int downPart = 1;
     public float bounds = 10;
@@ -60,7 +60,7 @@ public class Controller2D : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
-        A = Mathf.CeilToInt(ParticleCount/64);
+        A = Mathf.CeilToInt(ParticleCount/64f);
         k =  scale*scale/2.5669699665e-38f * CoulombConstant;//1.602176634e-19f * CoulombConstant;
         Debug.Log(k);
         minDistSqrt = minDist*minDist;
