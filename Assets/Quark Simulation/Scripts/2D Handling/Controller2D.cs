@@ -8,6 +8,7 @@ public class Controller2D : MonoBehaviour
     public int ParticleCount = 1024;
     public int upPart = 1;
     public int downPart = 1;
+    public float bounds = 10;
 
     public float TimeFactor = 0.0002f;
     public float CoulombConstant = 8.987e-09f;
@@ -19,18 +20,25 @@ public class Controller2D : MonoBehaviour
     public float dampening = 0.9f;
     public float a = 0.4f;
     public float o = 0.18f;
-    public float bounds = 10;
-    public int A;
+
+    public Color UpColor = Color.red;
+    public Color DownColor = Color.blue;
 
 
-     Vector2[] positions;
-     Vector2[] velocities;
+
+    Vector2[] positions;
+    Vector2[] velocities;
     public Color[] colors;
     float[] charges;
 
     float k;
     float minDistSqrt;
     float maxDistSqrt;
+
+    public bool DoApply;
+    public bool updateColors;
+    public int A;
+
 
     ComputeBuffer positionsBuffer;
     ComputeBuffer velocitiesBuffer;
@@ -59,9 +67,11 @@ public class Controller2D : MonoBehaviour
         maxDistSqrt = maxDist*maxDist;
 
 
+
         positions = new Vector2[ParticleCount];
         velocities = new Vector2[ParticleCount];
         charges = new float[upPart + downPart];
+        colors = new Color[upPart + downPart];
 
         positionsBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 2);
         velocitiesBuffer = new ComputeBuffer(ParticleCount, sizeof(float) * 2);
@@ -85,10 +95,12 @@ public class Controller2D : MonoBehaviour
             if (i < upPart)
             {
                 charges[i] = 2f/3f;
+                colors[i] = UpColor;
             }
             else
             {
                 charges[i] = -1f/3f;
+                colors[i] = DownColor;
             }
         }
 
@@ -121,9 +133,40 @@ public class Controller2D : MonoBehaviour
         colorBuffer.Release();
     }
 
+
     // Update is called once per frame
     void Update()
     {
+
+        if (DoApply)
+        {
+            minDistSqrt = minDist*minDist;
+            maxDistSqrt = maxDist*maxDist;
+            compute.SetFloat("_O", o);
+            compute.SetFloat("_A", a);
+            compute.SetFloat("_dampening", dampening);
+            compute.SetFloat("_minDistSqrt", minDistSqrt);
+            compute.SetFloat("_maxDistSqrt", maxDistSqrt);
+            compute.SetFloat("_TimeFactor", TimeFactor);
+            DoApply = false;
+        }
+        if (updateColors)
+        {
+            for(int i=0; i<upPart+downPart; i++)
+            {
+                if (i < upPart)
+                {
+                    colors[i] = UpColor;
+                }
+                else
+                {
+                    colors[i] = DownColor;
+                }
+            }
+            updateColors = false;
+            colorBuffer.SetData(colors);
+        }
+
         compute.Dispatch(updateVelocitiesID, A,1,1);
         compute.Dispatch(updatePositionsID, A,1,1);
         rp = new RenderParams(material);
