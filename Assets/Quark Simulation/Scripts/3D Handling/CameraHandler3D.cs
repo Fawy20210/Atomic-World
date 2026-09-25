@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CameraHandler3D : MonoBehaviour
@@ -25,26 +26,28 @@ public class CameraHandler3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!EventSystem.current.IsPointerOverGameObject()){
+            Vector2 lookValue = lookAction.ReadValue<Vector2>() * sensitivity;
+            Vector2 scrollValue = ScrollAction.ReadValue<Vector2>();
+            if (scrollValue.y < 0)
+            {
+                MovementScale /= MovementScaleFactor;        
+                MovementScaleInput.text = MovementScale.ToString();
+                //Debug.Log((scrollValue.y, MovementScale));      
+            } else if(scrollValue.y > 0)
+            {
+                MovementScale *= MovementScaleFactor;
+                MovementScaleInput.text = MovementScale.ToString();
+                //Debug.Log((scrollValue.y, MovementScale));      
+            }
+
+            if (LeftClickAction.IsPressed())
+            {
+                transform.Rotate(new Vector2(-lookValue.y,lookValue.x),Space.Self);        
+            }
+        }
+
         Vector3 moveValue = moveAction.ReadValue<Vector3>();
-        Vector2 lookValue = lookAction.ReadValue<Vector2>() * sensitivity;
-        Vector2 scrollValue = ScrollAction.ReadValue<Vector2>();
-        if (scrollValue.y < 0)
-        {
-            MovementScale /= MovementScaleFactor;        
-            MovementScaleInput.text = MovementScale.ToString();
-            //Debug.Log((scrollValue.y, MovementScale));      
-        } else if(scrollValue.y > 0)
-        {
-            MovementScale *= MovementScaleFactor;
-            MovementScaleInput.text = MovementScale.ToString();
-            //Debug.Log((scrollValue.y, MovementScale));      
-        }
-
-        if (LeftClickAction.IsPressed())
-        {
-            transform.Rotate(new Vector2(-lookValue.y,lookValue.x),Space.Self);        
-        }
-
         transform.Translate(moveValue * MovementScale);
     }
     public void ResetCamera()

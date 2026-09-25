@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CameraHandler2D : MonoBehaviour
@@ -20,18 +21,20 @@ public class CameraHandler2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 moveValue = moveAction.ReadValue<Vector3>();
-        Vector2 scrollValue = ScrollAction.ReadValue<Vector2>();
-        if (scrollValue.y < 0)
-        {
-            MovementScale /= MovementScaleFactor;        
-            MovementScaleInput.text = MovementScale.ToString();
-        } else if(scrollValue.y > 0)
-        {
-            MovementScale *= MovementScaleFactor;
-            MovementScaleInput.text = MovementScale.ToString();   
+        if(!EventSystem.current.IsPointerOverGameObject()){
+            Vector2 scrollValue = ScrollAction.ReadValue<Vector2>();
+            if (scrollValue.y < 0)
+            {
+                MovementScale /= MovementScaleFactor;        
+                MovementScaleInput.text = MovementScale.ToString();
+            } else if(scrollValue.y > 0)
+            {
+                MovementScale *= MovementScaleFactor;
+                MovementScaleInput.text = MovementScale.ToString();   
+            }
         }
 
+        Vector3 moveValue = moveAction.ReadValue<Vector3>();
         transform.position += new Vector3(moveValue.x, moveValue.z,moveValue.y) * MovementScale;
     }
     public void ResetCamera()
